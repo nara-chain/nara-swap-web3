@@ -1,0 +1,9 @@
+node_modules/
+dist/
+test-results/
+playwright-report/
+.playwright-mcp/
+playwright-debug.png
+nara-*.png
+.env
+.DS_Store
