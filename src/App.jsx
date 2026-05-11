@@ -157,7 +157,7 @@ export default function App() {
   const [swapFlipAnimating, setSwapFlipAnimating] = useState(false)
 
   const [bridgeToken, setBridgeToken] = useState('USDC')
-  const [bridgeFrom, setBridgeFrom] = useState('nara')
+  const [bridgeFrom, setBridgeFrom] = useState('solana')
   const [bridgeAmount, setBridgeAmount] = useState('')
   const [bridgeExecuting, setBridgeExecuting] = useState(false)
   const [bridgeResult, setBridgeResult] = useState(null)

@@ -4,7 +4,6 @@ import {
   NARA_USDC_MINT,
   NARA_USDT_MINT,
   SOLANA_USDC_MINT,
-  SOLANA_USDT_MINT,
 } from 'nara-sdk/src/bridge'
 
 export const REOWN_PROJECT_ID = import.meta.env.VITE_REOWN_PROJECT_ID || '39b6b2b7c41ad4a663db80a48c302899'
@@ -28,12 +27,6 @@ export const BRIDGE_ASSETS = [
     decimals: 6,
     naraMint: NARA_USDC_MINT,
     solanaMint: SOLANA_USDC_MINT,
-  },
-  {
-    symbol: 'USDT',
-    decimals: 6,
-    naraMint: NARA_USDT_MINT,
-    solanaMint: SOLANA_USDT_MINT,
   },
   {
     symbol: 'SOL',

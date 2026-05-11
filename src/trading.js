@@ -1,9 +1,16 @@
 import { Connection, Keypair, PublicKey, VersionedTransaction } from '@solana/web3.js'
 import { makeBridgeIxs, calculateBridgeFee, BRIDGE_TOKENS, extractMessageId } from 'nara-sdk/src/bridge'
 import { Buffer } from 'buffer'
-import { NARA_ROUTER_BASE, NARA_RPC_URL, SOLANA_RPC_URL, WSOL_MINT } from './config.js'
+import { BRIDGE_ASSETS, NARA_ROUTER_BASE, NARA_RPC_URL, SOLANA_RPC_URL, WSOL_MINT } from './config.js'
 import { parseUnits } from './utils.js'
 import { signAndSendInstructions, waitForConfirmation } from './tx.js'
+
+const supportedBridgeTokens = new Set(BRIDGE_ASSETS.map(asset => asset.symbol))
+
+function getSupportedBridgeConfig(token) {
+  if (!supportedBridgeTokens.has(token)) return null
+  return BRIDGE_TOKENS[token] ?? null
+}
 
 export async function fetchNaraQuote({ fromToken, toToken, amount, slippage }) {
   const rawAmount = parseUnits(amount, fromToken.decimals)
@@ -81,7 +88,7 @@ export async function executeNaraSwap({ walletProvider, address, fromToken, toTo
 }
 
 export function getBridgePreview({ token, amount }) {
-  const cfg = BRIDGE_TOKENS[token]
+  const cfg = getSupportedBridgeConfig(token)
   if (!cfg || !amount || Number(amount) <= 0) return null
   const raw = parseUnits(amount, cfg.decimals)
   const split = calculateBridgeFee(raw, undefined, cfg.minFee ?? 0n)
@@ -89,13 +96,13 @@ export function getBridgePreview({ token, amount }) {
 }
 
 export function getBridgeMinimum(token) {
-  const cfg = BRIDGE_TOKENS[token]
+  const cfg = getSupportedBridgeConfig(token)
   if (!cfg) return null
   return Number(cfg.minAmount) / 10 ** cfg.decimals
 }
 
 export async function executeBridge({ walletProvider, address, token, fromChain, amount }) {
-  const cfg = BRIDGE_TOKENS[token]
+  const cfg = getSupportedBridgeConfig(token)
   if (!cfg) throw new Error(`Unsupported token: ${token}`)
   const rawAmount = parseUnits(amount, cfg.decimals)
   if (rawAmount < cfg.minAmount) {
